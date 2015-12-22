@@ -12,7 +12,7 @@ class Connection:
     self._db = db
     self._pwd = pwd
     
-  def search(self, obj):
+  def search(self, obj, month=0):
     return self._sock.execute(self._db, self._uid, self._pwd, obj, 'search', [])
 
   def get(self, obj, ids):
