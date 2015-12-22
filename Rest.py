@@ -12,8 +12,8 @@ class Connection:
     self._db = db
     self._pwd = pwd
     
-  def search(self, obj, month=0):
-    return self._sock.execute(self._db, self._uid, self._pwd, obj, 'search', [])
+  def searchDate(self, obj, myDate='2015-12%'):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search', [[['date', 'like', myDate]]])
 
   def get(self, obj, ids):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'read', ids)

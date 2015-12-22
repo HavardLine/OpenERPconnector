@@ -2,17 +2,6 @@ import Rest
 from os.path import expanduser
 from openpyxl import load_workbook
 
-
-con = Rest.Connection()
-
-#1: asking for every task_id, 2: asking for every work-record
-ids = con.search('project.task.work',12)
-print ids
-works = con.get('project.task.work', [ids])
-print works[1]
-
-
-
 basePath = expanduser("~")+'\\server\\LTS\\grunndata\\'
 templatePath = basePath+'template.xlsx'
 outPath = basePath+'timesheets2.xlsx'
@@ -20,8 +9,22 @@ outPath = basePath+'timesheets2.xlsx'
 wb = load_workbook(templatePath) 
 shResult = wb.get_sheet_by_name('result')
 shPayment = wb.get_sheet_by_name('payment')
-
 shCmd = wb.get_sheet_by_name('cmd')
+
+#Lese inn maaned og aar fra template-fil
+strYear = shCmd['B2'].value
+strMonth = shCmd['B1'].value
+strDato = str(strYear)+ '-' + str(strMonth)
+
+con = Rest.Connection()
+
+
+#1: asking for every task_id, 2: asking for every work-record
+ids = con.searchDate('project.task.work', strDato)
+print ids
+works = con.get('project.task.work', [ids])
+print works[0]
+
 
 #Overskrifter raw data
 shResult.cell(row = 1, column = 1).value = 'Dato'
@@ -104,12 +107,14 @@ for index, item in enumerate(works):
   shResult.cell(row = index+2, column = 6).value=lonn
 print u'Timer H\xe5vard:', timerHavard
 print u'Timer B\xe5rd:', timerBard
-print 'Timer Dynatec 096 Havard:', timerHavardDynatec096
-print 'Timer Dynatec 096 Bard:', timerBardDynatec096
+print u'Timer Dynatec 096 H\xe5vard:', timerHavardDynatec096
+print u'Timer Dynatec 096 B\xe5rd:', timerBardDynatec096
 print u'Timer Sl\xe5ttland 31159 H\xe5vard :', timerHavardSlattland31159
 print u'Timer Sl\xe5ttland 31159 B\xe5rd:', timerBardSlattland31159
 print u'Timer interntid H\xe5vard:', timerHavardInterntid
 print u'Timer interntid B\xe5rd:', timerBardInterntid
+
+print 'Testprint dato:', strDato
 
 shPayment.cell(row = 1, column = 1).value = 'Payment'
 shPayment.cell(row = 2, column = 1).value = 'user_id'
