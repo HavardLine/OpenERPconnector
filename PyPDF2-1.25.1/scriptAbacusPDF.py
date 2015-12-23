@@ -21,7 +21,7 @@ c.save()
 #Make variable with new date-pdf
 inputDato = PdfFileReader(open("DatoStempel.pdf", "rb"))
 
-#Change directories to find PDFs in alle the folders
+#Change directories to find PDFs in all the folders
 os.chdir(expanduser("~")+r"\server\LTS\bedrift\ABACUS_arbeidsmappe\bilag")
 for findPDF in glob.glob("*.pdf"):
     files = PdfFileReader(open(findPDF, "rb"))
@@ -60,5 +60,5 @@ for findPDF in glob.glob("*.pdf"):
 
 
 #Put all pages together to one file
-os.chdir(r"C:\Users\Anfinn\server\LTS\bedrift\ABACUS_arbeidsmappe")
+os.chdir(expanduser("~")+r"\server\LTS\bedrift\ABACUS_arbeidsmappe")
 output.write(file('ABACUS.pdf','wb'))
