@@ -40,7 +40,7 @@ class Connection:
     file_pdf.close()
     return True
 
-#Test-code for mudule
+#Test-code for module
 if __name__ == '__main__':
   con = Connection()
   print con.get('product.pricelist', [1])
