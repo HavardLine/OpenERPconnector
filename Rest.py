@@ -11,6 +11,9 @@ class Connection:
     self._sock = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
     self._db = db
     self._pwd = pwd
+
+  def search(self, obj):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search', [[]])
     
   def searchDate(self, obj, myDate='2015-12%'):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search', [[['date', 'like', myDate]]])

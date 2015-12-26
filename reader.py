@@ -1,11 +1,22 @@
 import Rest
 
-con = Rest.Connection()
+con = Rest.Connection(db='LTS', uri='http://172.16.1.146:8070')
+#obj = 'res.partner'
+#obj = 'product.product'
+#obj = 'project.task'
+#obj = 'project.task.work'
+obj = 'account.invoice'
 
 #Asking for id number 1 in the products.products object.
-#print con.get('product.product', [1])
-print con.search('product.product')
-#print con.search('project.project')
-#print con.get('project.project', [1])
-#print con.get('project.task', [1])[0]
-#print con.get('project.task.work', [1])
+ids = con.search(obj)
+print ids
+element = con.get(obj, [1])
+
+#listing keys in element
+keys= element.keys()
+for key in keys:
+  print key
+
+#listing keys and values in element
+#for item in element:
+#  print item, " = ", element[item]
