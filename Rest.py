@@ -24,17 +24,13 @@ class Connection:
 
   def getPDF(self, myDate):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
-
     ids = self._sock.execute_kw(self._db, self._uid, self._pwd,
       'account.invoice', 'search',
       [[('create_date', 'like', myDate)]])
-
     result = report.render_report(self._db, self._uid, self._pwd,
       'account.report_invoice', ids)
-    
     report_data = result['result'].decode('base64')
-
-
+    
     file_pdf = open(expanduser("~")+'/invoices_out/'+str(myDate)+' invoices.pdf','w')
     file_pdf.write(report_data)
     file_pdf.close()
