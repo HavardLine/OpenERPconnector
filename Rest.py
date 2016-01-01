@@ -1,3 +1,4 @@
+from os.path import expanduser
 import xmlrpclib
 import csv
 import time
@@ -27,13 +28,14 @@ class Connection:
     report_data = result['result'].decode('base64')
 
 
-    file_pdf = open('invoices.pdf','w')
+    file_pdf = open(expanduser("~")+'/server/accounting/invoices_out/invoices.pdf','w')
     file_pdf.write(report_data)
     file_pdf.close()
     return True
 
 #Test-code for module
 if __name__ == '__main__':
+  #saving all invoices
   con = Connection()
   ids = con.search('account.invoice')
   print con.getPDF(ids) 
