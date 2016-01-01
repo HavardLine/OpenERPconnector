@@ -1,6 +1,6 @@
 import Rest
 
-con = Rest.Connection(db='LTS', uri='http://172.16.1.146:8070')
+con = Rest.Connection(db='test', uri='http://localhost:8069')
 #obj = 'res.partner'
 #obj = 'product.product'
 #obj = 'project.task'
