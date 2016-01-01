@@ -1,5 +1,5 @@
 from os.path import expanduser
-import xmlrpclib, syslog
+import xmlrpclib
 import csv
 import time
 import base64
@@ -26,7 +26,7 @@ class Connection:
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
     ids = self._sock.execute_kw(self._db, self._uid, self._pwd,
       'account.invoice', 'search',
-      [[('create_date', 'like', myDate)]])
+      [[('date_invoice', 'like', myDate)]])
     result = report.render_report(self._db, self._uid, self._pwd,
       'account.report_invoice', ids)
     report_data = result['result'].decode('base64')
@@ -37,13 +37,11 @@ class Connection:
     
     if len(ids)>0:
       logMsg = 'PDF ids '+str(ids)+' found'
-      syslog.syslog(syslog.LOG_INFO, logMsg)
       print logMsg
       return True
     else:
       print ids
       logMsg = 'No invoices found using parameter: '+ myDate
-      syslog.syslog(syslog.LOG_INFO, logMsg)
       print logMsg
       return False
 
