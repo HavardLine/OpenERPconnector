@@ -1,5 +1,5 @@
 from os.path import expanduser
-import xmlrpclib
+import xmlrpclib, syslog
 import csv
 import time
 import base64
@@ -22,21 +22,47 @@ class Connection:
   def get(self, obj, ids):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'read', ids)
 
-  def getPDF(self, ids):
+  def getPDF(self, myDate):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
-    result = report.render_report(self._db, self._uid, self._pwd, 'account.report_invoice', ids)
+
+    ids = self._sock.execute_kw(self._db, self._uid, self._pwd,
+      'account.invoice', 'search',
+      [[('create_date', 'like', myDate)]])
+
+    result = report.render_report(self._db, self._uid, self._pwd,
+      'account.report_invoice', ids)
+    
     report_data = result['result'].decode('base64')
 
 
-    file_pdf = open(expanduser("~")+'/server/accounting/invoices_out/invoices.pdf','w')
+    file_pdf = open(expanduser("~")+'/invoices_out/'+str(myDate)+' invoices.pdf','w')
     file_pdf.write(report_data)
     file_pdf.close()
-    return True
+    
+    if len(ids)>0:
+      logMsg = 'PDF ids '+str(ids)+' found'
+      syslog.syslog(syslog.LOG_INFO, logMsg)
+      print logMsg
+      return True
+    else:
+      print ids
+      logMsg = 'No invoices found using parameter: '+ myDate
+      syslog.syslog(syslog.LOG_INFO, logMsg)
+      print logMsg
+      return False
 
 #Test-code for module
 if __name__ == '__main__':
-  #saving all invoices
+  import sys, getopt
+  myDate = ''
+ 
+  opts, args = getopt.getopt(sys.argv[1:],"d:")
+  if len(opts)!=1:
+    print 'default options: -d <date>'
+  else:
+    #saving all invoices
+    myDate = opts[0][1]
+ 
   con = Connection()
-  ids = con.search('account.invoice')
-  print con.getPDF(ids) 
+  print con.getPDF(myDate) 
 
