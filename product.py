@@ -2,9 +2,10 @@ import Rest, xlrd
 con = Rest.Connection()
 
 class Manager:
-  
-  
   def importPXC(self, filename='ShoppingCart.xls'):
+    """Charts at phoenixcontact.com can be exported to excel.
+    This method imports data into ODOO.
+    TODO: check for existing product before importing"""
     
     template = con.search('product.template', ['default_code', '=', 'LTS.part'])
     if len(template)==1:
@@ -27,7 +28,6 @@ class Manager:
       out_price = cost/(1-margin)
       print cost
       print out_price
-      
       new_template = {
         'active': template['active'],
         'default_code': 'PXC.'+sh.cell_value(rowx=row, colx=0), #input field
@@ -41,15 +41,11 @@ class Manager:
         'cost_method': template['cost_method'],
         'categ_id': template['categ_id'][0],
         }
-
       new_template_id = con.setProductTemplate(new_template)
       print 'new_template_id =', new_template_id
-
       import pprint
       pp.pprint(new_template)
       print ''
-      #
-      #print new_template_id, new_product_id
       row += 1
 
   def find(self):
