@@ -5,7 +5,7 @@ import time
 import base64
 
 class Connection:
-  def __init__(self, user='admin', pwd='a', db='test', uri='http://localhost:8069'):
+  def __init__(self, user='admin', pwd='admin', db='test', uri='http://localhost:8069'):
     sock_common = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
     self._uid = sock_common.login(db, user, pwd)
     self._uri = uri
@@ -13,14 +13,27 @@ class Connection:
     self._db = db
     self._pwd = pwd
 
-  def search(self, obj):
-    return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search', [[]])
+  def search(self, obj, terms=[], opts = {}):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search_read', [[terms]], opts)
+	
+  def searchProductTemplate(self, default_code):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'search', [[['default_code', 'like', default_code]]])
+    
+  def searchProduct(self, default_code):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'search', [[['active', '=', True], ['default_code', '=', default_code]]])
     
   def searchDate(self, obj, myDate='2015-12%'):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search', [[['date', 'like', myDate]]])
 
   def get(self, obj, ids):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'read', ids)
+
+  def getProduct(self, product_name):
+    #return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'search_read', [[]], {})
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'read', [11471])
+	
+  def getProductTemplate(self, product_name):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'read', [8072])
 
   def getPDF(self, myDate):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
@@ -44,6 +57,19 @@ class Connection:
       logMsg = 'No invoices found using parameter: '+ myDate
       print logMsg
       return False
+	
+
+  def setProduct(self, product):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'create', [product])
+	
+  def setProductTemplate(self, product_template):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'create', [product_template])
+	
+  def deleteProduct(self, ids):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'unlink', [ids])
+	
+  def deleteProductTemplate(self, ids):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'unlink', [ids])
 
 #Test-code for module
 if __name__ == '__main__':
