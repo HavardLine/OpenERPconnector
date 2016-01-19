@@ -26,7 +26,7 @@ class Connection:
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
     ids = self._sock.execute_kw(self._db, self._uid, self._pwd,
       'account.invoice', 'search',
-      [[('date_invoice', 'like', myDate)]])
+      [[['date_invoice', 'like', myDate], ['state', '!=', 'draft']]])
     result = report.render_report(self._db, self._uid, self._pwd,
       'account.report_invoice', ids)
     report_data = result['result'].decode('base64')
