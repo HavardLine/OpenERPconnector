@@ -1,4 +1,4 @@
-import Rest, xlrd
+import Rest, xlrd, yaml, pprint, ftps
 con = Rest.Connection()
 
 
@@ -17,7 +17,6 @@ class Manager:
       template = template[0]
     else:
       template = False
-    import pprint
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(template)
       
@@ -48,7 +47,6 @@ class Manager:
         }
       new_template_id = con.setProductTemplate(new_template)
       print 'new_template_id =', new_template_id
-      import pprint
       pp.pprint(new_template)
       print ''
       row += 1
@@ -98,6 +96,4 @@ if __name__ == '__main__':
   product = Manager()
   dataset = product.readActive()
   print product.createCatalog(dataset)
-  
-  pp = pprint.PrettyPrinter(indent=2)
-  pp.pprint(dataset[0])
+  print ftps.send('Hi')
