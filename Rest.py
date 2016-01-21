@@ -1,11 +1,15 @@
 from os.path import expanduser
 import xmlrpclib
-import csv
+import yaml
 import time
 import base64
 
+with open("config.yml", "r") as f:
+    params = yaml.load(f)
+params = params['odoo']
+
 class Connection:
-  def __init__(self, user='admin', pwd='admin', db='test', uri='http://localhost:8069'):
+  def __init__(self, user=params['user'], pwd=params['pwd'], db=params['db'], uri=params['uri']):
     sock_common = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
     self._uid = sock_common.login(db, user, pwd)
     self._uri = uri
@@ -16,6 +20,12 @@ class Connection:
   def search(self, obj, terms=[], opts = {}):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search_read', [[terms]], opts)
 	
+  def searchRead(self, obj, terms=[], opts = {}):
+    return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'search_read', [[terms]], opts)
+  
+  #def set(self, obj, ids, opts):
+  #  return self._sock.execute_kw(self._db, self._uid, self._pwd, obj, 'write', [ids, opts])
+
   def searchProductTemplate(self, default_code):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'search', [[['default_code', 'like', default_code]]])
     
@@ -34,12 +44,12 @@ class Connection:
 	
   def getProductTemplate(self, product_name):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.template', 'read', [8072])
-
+	
   def getPDF(self, myDate):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
     ids = self._sock.execute_kw(self._db, self._uid, self._pwd,
       'account.invoice', 'search',
-      [[['date_invoice', 'like', myDate], ['state', '!=', 'draft']]])
+      [[('date_invoice', 'like', myDate)]])
     result = report.render_report(self._db, self._uid, self._pwd,
       'account.report_invoice', ids)
     report_data = result['result'].decode('base64')
@@ -58,7 +68,6 @@ class Connection:
       print logMsg
       return False
 	
-
   def setProduct(self, product):
     return self._sock.execute_kw(self._db, self._uid, self._pwd, 'product.product', 'create', [product])
 	

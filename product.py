@@ -1,6 +1,11 @@
 import Rest, xlrd
 con = Rest.Connection()
 
+
+with open("config.yml", "r") as f:
+    params = yaml.load(f)
+params = params['productCatalog']
+
 class Manager:
   def importPXC(self, filename='ShoppingCart.xls'):
     """Charts at phoenixcontact.com can be exported to excel.
@@ -50,8 +55,49 @@ class Manager:
 
   def find(self):
     print con.search('product.product', ['name', '=', 'Software - STARTUP+'], {'fields' : ['display_name', 'id']})
+
+  def readActive(self):
+    """ Returns all products that are marked as active
+    """
+    #data = con.searchRead('product.product', ['code', 'like', 'PXC.'], {})
+    return con.searchRead('product.product', ['default_code', 'like', 'PXC.'])
+	
+  def createCatalog(self, dataset, catalogParams = params):
+    import time
+    from reportlab.lib.enums import TA_JUSTIFY
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import mm
+ 
+    doc = SimpleDocTemplate(catalogParams['reportfile'],
+                            rightMargin=72,leftMargin=72,
+                            topMargin=72,bottomMargin=18)
+    Story=[]
+    formatted_time = time.ctime()
+
+    im = Image(catalogParams['logo_path'], catalogParams['logo_width']*mm, catalogParams['logo_height']*mm)
+    Story.append(im)
+    styles=getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
+      
+    
+    for item in dataset:
+      #display name
+      ptext = '<font size=12>%s</font>' % item['display_name']
+      Story.append(Paragraph(ptext, styles["Normal"]))
+      Story.append(Spacer(1, 12))
+      #description
+      ptext = '<font size=12>%s</font>' % item['description']
+      Story.append(Paragraph(ptext, styles["Normal"]))
+      Story.append(Spacer(1, 12))
+
+    doc.build(Story)
+    return True
   
 if __name__ == '__main__':
-  manager = Manager()
-  manager.importPXC()
-  manager.find()
+  product = Manager()
+  dataset = product.readActive()
+  print product.createCatalog(dataset)
+  
+  pp = pprint.PrettyPrinter(indent=2)
+  pp.pprint(dataset[0])
