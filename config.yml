@@ -1,0 +1,13 @@
+odoo:
+  uri: http://localhost:8069
+  db: test
+  user: admin
+  pwd: admin
+
+productCatalog:
+  company_name: ACHME INC
+  datafile: product_data.yml
+  reportfile: catalog.pdf
+  logo_path: logo.png
+  logo_width: 50
+  logo_height: 20
