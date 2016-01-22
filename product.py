@@ -1,5 +1,5 @@
-import Rest, xlrd, yaml, pprint, ftps
-con = Rest.Connection()
+import odoo, xlrd, yaml, pprint, ftps
+con = odoo.Connection()
 
 
 with open("config.yml", "r") as f:
@@ -93,7 +93,7 @@ class Manager:
     return True
   
 if __name__ == '__main__':
-  product = Manager()
-  dataset = product.readActive()
-  print product.createCatalog(dataset)
-  print ftps.send('Hi')
+  manager = Manager()
+  dataset = manager.readActive()
+  #print manager.createCatalog(dataset)
+  #print ftps.send('Hi')

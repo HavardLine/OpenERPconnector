@@ -1,6 +1,6 @@
-import Rest
+import odoo
 
-con = Rest.Connection(db='test', uri='http://localhost:8069')
+con = odoo.Connection(db='test', uri='http://localhost:8069')
 #obj = 'res.partner'
 #obj = 'product.product'
 #obj = 'project.task'
