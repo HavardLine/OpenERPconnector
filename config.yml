@@ -11,3 +11,8 @@ productCatalog:
   logo_path: logo.png
   logo_width: 50
   logo_height: 20
+
+ftps_webserver:
+  user: my_usename
+  pwd: my_password
+  url: my_url_without_fttp_prefix

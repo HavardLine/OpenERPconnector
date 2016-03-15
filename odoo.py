@@ -14,7 +14,7 @@ class Connection:
     self._sock = xmlrpclib.ServerProxy(params['uri'] + '/xmlrpc/object')
 
   def search(self, obj, terms=[], opts = {}):
-    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search_read', [[terms]], opts)
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search', [[terms]], opts)
 	
   def searchRead(self, obj, terms=[], opts = {}):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search_read', [[terms]], opts)
