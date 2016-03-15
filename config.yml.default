@@ -6,8 +6,13 @@ odoo:
 
 productCatalog:
   company_name: ACHME INC
-  datafile: product_data.yml
+  datafile: product_catalog/product_data.yml
   reportfile: catalog.pdf
-  logo_path: logo.png
+  logo_path: product_catalog/logo.png
   logo_width: 50
   logo_height: 20
+
+ftps_webserver:
+  user: my_usename
+  pwd: my_password
+  url: my_url_without_fttp_prefix
