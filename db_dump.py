@@ -1,7 +1,14 @@
 import base64, erppeek, config
 
 def main():
-#    """Main program."""
+    """Exports backup of ODOO database and files
+    Parameters used:
+    odoo.uri
+    odoo_backup.pwd
+    odoo_backup.dbs
+    odoo_backup.folder
+    
+    """
     conf = config.Group('odoo').value
     odoo = erppeek.Client(conf['uri'])
     b64data = odoo.db.dump(conf['pwd'], conf['db'])
@@ -11,5 +18,4 @@ def main():
     f.close
     return True
 
-#print 'OK'
 print main()
