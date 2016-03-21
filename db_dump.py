@@ -9,13 +9,18 @@ def main():
     odoo_backup.folder
     
     """
-    conf = config.Group('odoo').value
-    odoo = erppeek.Client(conf['uri'])
-    b64data = odoo.db.dump(conf['pwd'], conf['db'])
-    data = base64.b64decode(b64data)
-    f = open('outfile.dump', 'w')
-    f.write(data)
-    f.close
+    uri = config.Group('odoo').value['uri']
+    params = config.Group('odoo_backup').value
+
+    odoo = erppeek.Client(uri)
+    
+    for db in params['dbs']:
+      b64data = odoo.db.dump(params['pwd'], db)
+      data = base64.b64decode(b64data)
+      f = open('../'+db+'.zip', 'w')
+      f.write(data)
+      f.close
+      print 'DB '+db+' exported'
     return True
 
 print main()
