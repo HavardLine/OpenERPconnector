@@ -3,7 +3,6 @@ import base64
 import config
 
 params = config.Group('odoo').value
-print params
 
 class Connection:
   def __init__(self, params=params):
@@ -12,10 +11,10 @@ class Connection:
     self._sock = xmlrpclib.ServerProxy(params['uri'] + '/xmlrpc/object')
 
   def search(self, obj, terms=[], opts = {}):
-    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search', [[terms]], opts)
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search', [terms], opts)
 	
   def searchRead(self, obj, terms=[], opts = {}):
-    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search_read', [[terms]], opts)
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search_read', [terms], opts)
   
   #def set(self, obj, ids, opts):
   #  return self._sock.execute_kw(params['db'], params['user'], params['pwd'], obj, 'write', [ids, opts])

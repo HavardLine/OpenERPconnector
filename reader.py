@@ -1,6 +1,6 @@
 import odoo
 
-con = odoo.Connection(db='test', uri='http://localhost:8069')
+con = odoo.Connection()
 #obj = 'res.partner'
 #obj = 'product.product'
 #obj = 'project.task'
