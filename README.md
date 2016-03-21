@@ -1,12 +1,17 @@
 #OpenERPconnector
 The aim of this project is to get a better grip on the Odoo API. This is not usefull code for production.
 
+##Installation on ubuntu:
+sudo apt-get install python-pip
+sudo pip install erppeek
+pudo pip install pyyml
+
 ##ODOO modules used:
- Norway - Chart of Accounts
+ - Norway - Chart of Accounts
 
 ##Python modules used:
- erppeek
- pyyaml
+ - erppeek
+ - pyyaml
 
 
 ##Copyright (c) 2015 LTS AS
