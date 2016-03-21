@@ -1,11 +1,9 @@
 import xmlrpclib
-import yaml
 import base64
+import config
 
-with open("config.yml", "r") as f:
-    params = yaml.load(f)
-f.close()
-params = params['odoo']
+params = config.Group('odoo').value
+print params
 
 class Connection:
   def __init__(self, params=params):
