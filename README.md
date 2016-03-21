@@ -2,9 +2,11 @@
 The aim of this project is to get a better grip on the Odoo API. This is not usefull code for production.
 
 ##Installation on ubuntu:
+```
 sudo apt-get install python-pip
 sudo pip install erppeek
-pudo pip install pyyml
+sudo pip install pyyml
+```
 
 ##ODOO modules used:
  - Norway - Chart of Accounts
