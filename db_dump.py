@@ -1,4 +1,4 @@
-import base64, erppeek, config
+import base64, erppeek, config, os, datetime
 
 def main():
     """Exports backup of ODOO database and files
@@ -17,7 +17,10 @@ def main():
     for db in params['dbs']:
       b64data = odoo.db.dump(params['pwd'], db)
       data = base64.b64decode(b64data)
-      f = open('../'+db+'.zip', 'w')
+
+      path = os.environ['HOME']+'/Documents/ODOO/'+db+'-'+datetime.datetime.now().strftime("%Y-%m-%d-%I%M")+'.zip'
+      print path
+      f = open(path, 'w')
       f.write(data)
       f.close
       print 'DB '+db+' exported'
