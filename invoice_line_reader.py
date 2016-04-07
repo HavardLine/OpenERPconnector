@@ -1,40 +1,27 @@
 import odoo, pprint
 
 con = odoo.Connection()
+
+#reads open invoices
+obj = 'account.invoice'
+terms = [['state', '=', 'open'], ['type','=','out_invoice']]
+opts = {'fields': ['move_id', 'date_invoice', 'invoice_line']}
+invoices = con.searchRead(obj, terms, opts)
+
+print 'printing one invoice:'
+print invoices[0]
+print ''
+
+#read relevant invoice lines 
+invoice_lines = []
 obj = 'account.invoice.line'
-
-terms = []
-#terms = [['date', 'like', '2016-0']]
-opts = {}
-dataset = con.searchRead(obj, terms, opts)
-
-#print dataset[0]
+opts = {'fields': ['create_date', 'create_uid', 'price_subtotal', 'quantity', 'name', 'product_id']}
+for invoice in invoices:
+  terms = [['invoice_id', '=', invoice['id']]]
+  invoice_lines.extend(con.searchRead(obj, terms, opts))
 
 #pp = pprint.PrettyPrinter(indent=2)
-#pp.pprint(dataset[0]['display_name'])
+#pp.pprint(invoice_lines)#['display_name'])
 
-for data in dataset:
- print data['invoice_id']
- print data['write_uid']
- print data['price_subtotal']
- print ''
-
-
-#print dataset['display_name'])
-#invoice_line
-
-#task_ids = []
-#for data in dataset:
-#  task_ids.append(data['task_id'][1])
-#active_tasks = set(task_ids)
-#print 'active tasks:',list(active_tasks)
-
-#for task in active_tasks:
-#  print ''
-#  print 'Task name:', task
-#  total_hours = 0
-#  for data in dataset:
-#    if data['task_id'][1]==task:
-#      print data['date'][:10], '  ', str(data['hours'])+'t', '  ',data['display_name']
-#      total_hours += data['hours']
-#  print 'Total: '+str(total_hours)+'t'
+for line in invoice_lines:
+ print line['create_date'], line['price_subtotal'], line['create_uid'][1], line['product_id']
