@@ -3,6 +3,10 @@ odoo:
   db: test
   user: admin
   pwd: admin
+  
+odoo_backup:
+  dbs: ['test']
+  pwd: admin
 
 productCatalog:
   company_name: ACHME INC
