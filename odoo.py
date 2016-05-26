@@ -1,6 +1,7 @@
 import xmlrpclib
 import base64
 import config
+from os.path import expanduser
 
 params = config.Group('odoo').value
 
@@ -39,7 +40,7 @@ class Connection:
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], 'product.template', 'read', [8072])
 	
   def getPDF(self, myDate):
-    report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(self._uri))
+    report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(params['uri']))
     ids = self._sock.execute_kw(params['db'], self._uid, params['pwd'],
       'account.invoice', 'search',
       [[('date_invoice', 'like', myDate)]])
@@ -47,7 +48,7 @@ class Connection:
       'account.report_invoice', ids)
     report_data = result['result'].decode('base64')
     
-    file_pdf = open(expanduser("~")+'/invoices_out/'+str(myDate)+' invoices.pdf','w')
+    file_pdf = open(expanduser("~")+'/Documents/invoices_out/'+str(myDate)+' invoices.pdf','w')
     file_pdf.write(report_data)
     file_pdf.close()
     
