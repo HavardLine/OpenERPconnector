@@ -13,11 +13,11 @@ task_ids = []
 for data in dataset:
   task_ids.append(data['task_id'][1])
 active_tasks = set(task_ids)
-print 'active tasks:',list(active_tasks.encode(encoding='UTF-8'))
+print 'active tasks:',list(active_tasks)
 
 for task in active_tasks:
   print ''
-  print 'Task name:', task
+  print 'Task name:', task.encode(encoding='UTF-8')
   total_hours = 0
   for data in dataset:
     if data['task_id'][1]==task:
