@@ -1,5 +1,6 @@
 import odoo, os, sys
 from openpyxl import load_workbook
+from voluptuous import Schema, Coerce, ALLOW_EXTRA
 
 var_list_name = 'EUC'
 path = os.environ['HOME']+'/'+var_list_name+'.xlsx'
@@ -21,10 +22,6 @@ while ws.cell(row=r, column=5).value != None:
 		'name': ws.cell(row=r, column=7).value.encode('ascii','ignore') + ' ' + str(ws.cell(row=r, column=6).value),
 		'standard_price': ws.cell(row=r, column=10).value,
 		'list_price': ws.cell(row=r, column=14).value,
-		'fields': {
-		'standard_price': ws.cell(row=r, column=10).value,
-		'list_price': ws.cell(row=r, column=14).value
-		}
 		})
 	r+=1
 
@@ -44,13 +41,14 @@ else:
 for product in products:
 	my_id = con.execute("product.template", "search", [[['default_code', '=', product['id']]]], {'limit': 3})
 	if len(my_id) == 1:
-		print str(product['id']) + ' ' + str(product['standard_price'])
-		print my_id
+		#We have one product variant for this default_code. It can be updated
 		print con.execute("product.template","write",[my_id, {'standard_price':product['standard_price'], 'list_price':product['list_price']}])
 		updates+=1
 	elif len(my_id) > 1:
+		#This default_code has multiple variants. They will be ignored.
 		print 'Product ' + str(product['id']) + ' has multiple variants and will be ignored'
 	else:
+		#No product variants found for this default_code. The product is added to the list of imports.
 		print 'Product ' + str(product['id']) + ' do not currently exist in ODOO'
 		new_products.append({
 			'active': template['active'],
@@ -64,14 +62,13 @@ for product in products:
 			'type': template['type'],
 			'cost_method': template['cost_method'],
 			'categ_id': template['categ_id'][0]
-			#'seller_ids':''
 		})
 
 print str(updates) + ' products updated'
 print str(len(new_products)) + ' new products found'
 
 #Verify and add new devices
-from voluptuous import Schema, Coerce, ALLOW_EXTRA
+
 schema = Schema({
                 'default_code': str,
                 'name': str,
