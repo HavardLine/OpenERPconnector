@@ -1,13 +1,11 @@
-#!/usr/bin/env python
 
 import odoo
 
 con = odoo.Connection()
-obj = 'project.task.work'
 
-terms = [['date', 'like', '2016-03']]
-opts = {}
-dataset = con.searchRead(obj, terms, opts)
+terms = [['date', 'like', '2016-09']]
+
+dataset = con.searchRead('project.task.work', terms, {})
 
 task_ids = []
 for data in dataset:

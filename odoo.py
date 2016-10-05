@@ -11,8 +11,11 @@ class Connection:
     self._uid = sock_common.login(params['db'], params['user'], params['pwd'])
     self._sock = xmlrpclib.ServerProxy(params['uri'] + '/xmlrpc/object')
 
-  def search(self, obj, terms=[], opts = {}):
-    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search', [terms], opts)
+  def execute(self, odoo_object, keyword, terms, options={}):
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], odoo_object, keyword, terms, options)
+
+  def search(self, obj, terms=[[]], opts = {}):
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search', terms, opts)
 	
   def searchRead(self, obj, terms=[], opts = {}):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'search_read', [terms], opts)
@@ -32,13 +35,6 @@ class Connection:
   def get(self, obj, ids):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'read', ids)
 
-  def getProduct(self, product_name):
-    #return self._sock.execute_kw(params['db'], params['user'], params['pwd'], 'product.product', 'search_read', [[]], {})
-    return self._sock.execute_kw(params['db'], self._uid , params['pwd'], 'product.product', 'read', [11471])
-	
-  def getProductTemplate(self, product_name):
-    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], 'product.template', 'read', [8072])
-	
   def getPDF(self, myDate):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(params['uri']))
     ids = self._sock.execute_kw(params['db'], self._uid, params['pwd'],
@@ -63,16 +59,15 @@ class Connection:
       return False
 	
   def setProduct(self, product):
-    return self._sock.execute_kw(params['db'], params['user'], params['pwd'], 'product.product', 'create', [product])
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], 'product.product', 'create', product)
 	
   def setProductTemplate(self, product_template):
-    return self._sock.execute_kw(params['db'], params['user'], params['pwd'], 'product.template', 'create', [product_template])
+    return self._sock.execute_kw(params['db'], self._uid, params['pwd'], 'product.template', 'create', product_template)
 	
-  def deleteProduct(self, ids):
-    return self._sock.execute_kw(params['db'], params['user'], params['pwd'], 'product.product', 'unlink', [ids])
-	
-  def deleteProductTemplate(self, ids):
-    return self._sock.execute_kw(params['db'], params['user'], params['pwd'], 'product.template', 'unlink', [ids])
+  def deleteProduct(self, default_code):
+    p_ids = self.searchProduct(default_code)
+    t_ids = self.searchProductTemplate(default_code)
+    return p_ids, t_ids
 
 #Test-code for module
 if __name__ == '__main__':

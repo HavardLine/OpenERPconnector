@@ -2,21 +2,23 @@ import odoo
 
 con = odoo.Connection()
 #obj = 'res.partner'
-#obj = 'product.product'
 #obj = 'project.task'
+obj = 'product.product'
+#obj = 'product.template'
+#obj = 'product.variant'
 #obj = 'project.task.work'
-obj = 'account.invoice'
+#obj = 'account.invoice'
 
 #Asking for id number 1 in the products.products object.
 ids = con.search(obj)
 print ids
-element = con.get(obj, [1])
+element = con.get(obj, [10191])
 
-#listing keys in element
+print "\nListing keys in element:"
 keys= element.keys()
-for key in keys:
-  print key
+#for key in keys:
+#  print key
 
 #listing keys and values in element
-#for item in element:
-#  print item, " = ", element[item]
+for item in element:
+  print item, " = ", element[item]

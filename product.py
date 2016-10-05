@@ -1,4 +1,4 @@
-import odoo, xlrd, yaml, pprint, ftps
+import odoo, yaml, pprint, ftps
 con = odoo.Connection()
 
 
@@ -94,6 +94,6 @@ class Manager:
   
 if __name__ == '__main__':
   manager = Manager()
-  dataset = manager.readActive()
+  dataset = manager.find()
   #print manager.createCatalog(dataset)
   #print ftps.send('Hi')
