@@ -42,7 +42,7 @@ for product in products:
 	my_id = con.execute("product.template", "search", [[['default_code', '=', product['id']]]], {'limit': 3})
 	if len(my_id) == 1:
 		#We have one product variant for this default_code. It can be updated
-		print con.execute("product.template","write",[my_id, {'standard_price':product['standard_price'], 'list_price':product['list_price']}])
+		con.execute("product.template","write",[my_id, {'standard_price':product['standard_price'], 'list_price':product['list_price']}])
 		updates+=1
 	elif len(my_id) > 1:
 		#This default_code has multiple variants. They will be ignored.
