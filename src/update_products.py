@@ -1,4 +1,4 @@
-import odoo, os, sys
+import d_odoo, os, sys
 from openpyxl import load_workbook
 from voluptuous import Schema, Coerce, ALLOW_EXTRA
 
@@ -28,7 +28,7 @@ while ws.cell(row=r, column=5).value != None:
 print str(len(products)) + ' product lines found'
 
 #Reading data from ODOO, updates price, separates new devices
-con = odoo.Connection()
+con = d_odoo.Connection()
 
 template = con.execute('product.template', 'search_read', [[['default_code', '=', 'LTS.part']]])
 if len(template)==1:
