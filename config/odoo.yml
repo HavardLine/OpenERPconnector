@@ -1,0 +1,4 @@
+uri: http://localhost:8069
+db: test
+user: admin
+pwd: admin
