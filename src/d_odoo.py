@@ -1,9 +1,9 @@
 import xmlrpclib
 import base64
-import config
+import d_odoo_conf
 from os.path import expanduser
 
-params = config.Group('odoo').value
+params = d_odoo_conf.Group().value
 
 class Connection:
   def __init__(self, params=params):

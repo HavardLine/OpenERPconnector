@@ -1,7 +1,7 @@
 
-import odoo
+import d_odoo
 
-con = odoo.Connection()
+con = d_odoo.Connection()
 
 terms = [['date', 'like', '2016-09']]
 
