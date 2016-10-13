@@ -1,1 +1,1 @@
-print 'hi, this is the simplest file in this repo'
+import s_get_invoices
