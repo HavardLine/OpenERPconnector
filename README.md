@@ -1,18 +1,12 @@
 #OpenERPconnector
 The aim of this project is to get a better grip on the Odoo API. This is not usefull code for production.
 
-##Setup of Ubuntu system:
+##Setup of dependencies:
 ```
-sudo apt-get install python-pip
-sudo pip install erppeek
-sudo pip install pyyml
-sudo pip install voluptuous
+apt-get install python-pip
+pip install voluptuous
+pip install pysmb
 ```
-
-##Python modules used:
- - erppeek
- - pyyaml
- - voluptuous
 
 
 ##Copyright (c) 2015 LTS AS
