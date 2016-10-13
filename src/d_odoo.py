@@ -35,29 +35,11 @@ class Connection:
   def get(self, obj, ids):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'read', ids)
 
-  def getPDF(self, myDate):
+  def returnPDF(self, ids=[]):
     report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(params['uri']))
-    ids = self._sock.execute_kw(params['db'], self._uid, params['pwd'],
-      'account.invoice', 'search',
-      [[('date_invoice', 'like', myDate)]])
-    result = report.render_report(params['db'], self._uid, params['pwd'],
-      'account.report_invoice', ids)
-    report_data = result['result'].decode('base64')
+    result = report.render_report(params['db'], self._uid, params['pwd'], 'account.report_invoice', ids)
+    return result['result'].decode('base64')
     
-    file_pdf = open(expanduser("~")+'/Documents/invoices_out/'+str(myDate)+' invoices.pdf','w')
-    file_pdf.write(report_data)
-    file_pdf.close()
-    
-    if len(ids)>0:
-      logMsg = 'PDF ids '+str(ids)+' found'
-      print logMsg
-      return True
-    else:
-      print ids
-      logMsg = 'No invoices found using parameter: '+ myDate
-      print logMsg
-      return False
-	
   def setProduct(self, product):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], 'product.product', 'create', product)
 	
