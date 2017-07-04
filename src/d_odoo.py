@@ -1,4 +1,4 @@
-import xmlrpclib
+from xmlrpc import client
 import base64
 import d_odoo_conf
 from os.path import expanduser
@@ -7,9 +7,9 @@ params = d_odoo_conf.Group().value
 
 class Connection:
   def __init__(self, params=params):
-    sock_common = xmlrpclib.ServerProxy(params['uri'] + '/xmlrpc/common')
+    sock_common = client.ServerProxy(params['uri'] + '/xmlrpc/common')
     self._uid = sock_common.login(params['db'], params['user'], params['pwd'])
-    self._sock = xmlrpclib.ServerProxy(params['uri'] + '/xmlrpc/object')
+    self._sock = client.ServerProxy(params['uri'] + '/xmlrpc/object')
 
   def execute(self, odoo_object, keyword, terms, options={}):
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], odoo_object, keyword, terms, options)
@@ -36,7 +36,7 @@ class Connection:
     return self._sock.execute_kw(params['db'], self._uid, params['pwd'], obj, 'read', ids)
 
   def returnPDF(self, ids=[]):
-    report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(params['uri']))
+    report = client.ServerProxy('{}/xmlrpc/2/report'.format(params['uri']))
     result = report.render_report(params['db'], self._uid, params['pwd'], 'account.report_invoice', ids)
     return result['result'].decode('base64')
     

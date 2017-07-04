@@ -9,5 +9,5 @@ class Group:
 
 #Test-code for module
 if __name__ == '__main__':
-  print Group().value
+  print(Group().value)
 
