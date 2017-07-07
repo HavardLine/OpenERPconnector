@@ -108,7 +108,7 @@
             </div>
 
 			<p t-if="o.note">
-                <strong>Commercial terms:</strong>
+                <strong>Commercial terms:</strong><br/>
                 <span t-field="o.note"/>
             </p>
             <div class="oe_structure"/>
