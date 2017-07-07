@@ -107,10 +107,9 @@
                 </div>
             </div>
 
-            <p t-field="o.note"/>
-            <p t-if="o.payment_term.note">
-                <strong>Payment Term:</strong>
-                <span t-field="o.payment_term.note"/>
+			<p t-if="o.note">
+                <strong>Commercial terms:</strong>
+                <span t-field="o.note"/>
             </p>
             <div class="oe_structure"/>
         </div>
