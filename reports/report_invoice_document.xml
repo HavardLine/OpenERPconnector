@@ -5,7 +5,6 @@
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
                     <address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
-                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
                 </div>
             </div>
 
@@ -132,6 +131,10 @@
             <p t-if="o.payment_term.note">
                 <strong>Payment Term:</strong>
                 <span t-field="o.payment_term.note"/>
+            </p>
+			<p t-if="o.payment_term.note">
+                <strong>Date Due:</strong>
+                <span t-field="o.date_due"/>
             </p>
             <p t-if="o.fiscal_position.note">
                 <strong>Fiscal Position Remark:</strong>
