@@ -37,7 +37,7 @@
                     <p t-field="o.partner_id.ref"/>
                 </div>
                 <div class="col-xs-2" t-if="o.reference">
-                    <strong>Yor reference:</strong>
+                    <strong>Your reference:</strong>
                     <p t-field="o.reference"/>
                 </div>
             </div>
