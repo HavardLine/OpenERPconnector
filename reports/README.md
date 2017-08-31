@@ -1,2 +1,2 @@
 # Edit report schemes
-Go to Settings -> Invoice -> Invoice -> Search associated QWeb views
+Go to Settings -> Reports -> Reports -> select report -> Search associated QWeb views
