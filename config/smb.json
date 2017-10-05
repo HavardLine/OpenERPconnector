@@ -1,6 +1,6 @@
 {
 	"client": "clientname", 
-	"user": "username"
+	"user": "username",
 	"pwd": "my_password", 
 	"host": "hostname",
 	"host_ip": "192.168.1.3" 
