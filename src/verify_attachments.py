@@ -1,5 +1,7 @@
+
+
 from drivers import odoo_connector
-import logging, pprint
+import logging
 
 #Establish connection
 con = odoo_connector.Connection()
@@ -9,13 +11,12 @@ attachment_account_invoice = con.searchRead('ir.attachment', [[['res_model','=',
 attachment_res_ids = []
 for attachment in attachment_account_invoice:
     attachment_res_ids.append(attachment['res_id'])
-#Find all EXJ and ECNJ journals not in draft
-selection_invoices = con.searchRead('account.invoice', [[['journal_id','=', 2], ['state', '<>', 'draft']]])
-selection_invoices += con.searchRead('account.invoice', [[['journal_id','=', 4], ['state', '<>', 'draft']]])
+#Find all supplier invoices not in draft
+selection_invoices = con.searchRead('account.invoice', [[['journal_id','=', 2], ['state', '<>', 'draft']]]) #EXJ
+selection_invoices += con.searchRead('account.invoice', [[['journal_id','=', 4], ['state', '<>', 'draft']]]) #ECNJ
 #Verify that an attachment exists
 for move in selection_invoices:
     if move['id'] not in attachment_res_ids:
-        #logging.warning('Supplier invoice '+move['internal_number'] + ' dated ' + move['create_date'] +' has no attachment!')
         logging.warning(move['journal_id'][1] + ' ' + move['internal_number'] + ' dated ' + move['create_date'] + ' has no attachment!')
 
 #find all attachements in the account.move category
@@ -25,6 +26,7 @@ for attachment in attachment_account_move:
     attachment_res_ids.append(attachment['res_id'])
 #Find all journals that needs attachement
 selection_moves = con.searchRead('account.move', terms=[[['journal_id','=',5], ['state','=','posted']]]) #DIV
+selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',6]]]) #OPEJ
 selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',7], ['state','=','posted']]]) #BNK1
 selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',8]]]) #BNK2
 #Verify that an attachment exists
