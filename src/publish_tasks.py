@@ -20,17 +20,17 @@ for task in tasks:
                 tag = tag + category['display_name'] + ', '
     if task['description'][:8] == '@lts.no ':
         data.append({
-            'year': task['date_start'][:4],
+            'date': task['date_start'],
             'description': task['description'][8:],
             'tag': tag.strip(', ')
             })
   
+pandas.set_option('display.max_colwidth', 100)
 df = pandas.DataFrame(data)
-#Sort by year
-df = df.sort_values('year', ascending=False)
+df = df.sort_values('date', ascending=False)
+df['year'] = df['date'].astype(str).str[:4]
 #Changing place
 df2 = df[['year', 'description', 'tag']]
-#Changing column headers
 df2.columns = ['År', 'Beskrivelse', 'Tag']
 #Save file
 buffer = io.StringIO()
