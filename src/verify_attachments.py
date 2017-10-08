@@ -32,4 +32,4 @@ selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',8]]]
 #Verify that an attachment exists
 for move in selection_moves:
     if move['id'] not in attachment_res_ids:
-        logging.warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['create_date'] + ' has no attachment!')
+        logging.warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['create_date'][:10] + ' has no attachment!')
