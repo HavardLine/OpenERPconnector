@@ -19,8 +19,8 @@ class Connection:
     self._uid = sock_common.login(self.params['db'], self.params['user'], self.params['pwd'])
     self._sock = xmlrpc.client.ServerProxy(self.params['uri'] + '/xmlrpc/object', allow_none=True, use_builtin_types=True )
 
-  def execute(self, odoo_object, keyword, terms, options={}):
-    return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], odoo_object, keyword, terms, options)
+  def execute(self, obj, keyword, terms, options={}):
+    return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], obj, keyword, terms, options)
 
   def search(self, obj, terms=[[]], opts = {}):
     return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], obj, 'search', terms, opts)
@@ -29,7 +29,7 @@ class Connection:
     return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], obj, 'search_read', terms, opts)
 
   def read(self, obj, ids):
-    return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], obj, 'read', ids)
+    return self._sock.execute_kw(self.params['db'], self._uid, self.params['pwd'], obj, 'read', [ids])
 
   def returnPDF(self, ids=[]):
     sock_report = xmlrpc.client.ServerProxy('{}/xmlrpc/2/report'.format(self.params['uri']))

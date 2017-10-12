@@ -1,0 +1,92 @@
+{
+    "payment_type": [
+        {
+            "name": "0001 Fast lønn",
+            "account": "500000",
+            "balancing_account": "",
+            "calc_tabelltrekk": true,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": true,
+            "calc_feriepenger": true,
+            "calc_ff": true,
+            "calc_pensjonsgrunnlag": true
+        },
+        {
+            "name": "0010 Timelønn",
+            "account": "501000",
+            "balancing_account": "",
+            "calc_tabelltrekk": true,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": true,
+            "calc_feriepenger": true,
+            "calc_ff": true,
+            "calc_pensjonsgrunnlag": true
+        },
+        {
+            "name": "0025 Overtid",
+            "account": "502000",
+            "balancing_account": "",
+            "calc_tabelltrekk": true,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": true,
+            "calc_feriepenger": true,
+            "calc_ff": true,
+            "calc_pensjonsgrunnlag": false
+        },
+        {
+            "name": "0035 Feriepenger trekkfrie",
+            "account": "518000",
+            "balancing_account": "",
+            "calc_tabelltrekk": false,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": true,
+            "calc_feriepenger": false,
+            "calc_ff": true,
+            "calc_pensjonsgrunnlag": false
+        },
+        {
+            "name": "0060 Bilgdotgj. ant/sats u/avg",
+            "account": "710000",
+            "balancing_account": "",
+            "calc_tabelltrekk": false,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": false,
+            "calc_feriepenger": false,
+            "calc_ff": false,
+            "calc_pensjonsgrunnlag": false
+        },
+        {
+            "name": "0066 Trekkpl. bilgdotgjørelse",
+            "account": "531000",
+            "balancing_account": "",
+            "calc_tabelltrekk": true,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": false,
+            "calc_feriepenger": false,
+            "calc_ff": false,
+            "calc_pensjonsgrunnlag": false
+        },
+        {
+            "name": "0080 Diett",
+            "account": "715000",
+            "balancing_account": "",
+            "calc_tabelltrekk": false,
+            "calc_prosenttrekk": false,
+            "calc_arbeidsgiveravgift": false,
+            "calc_feriepenger": false,
+            "calc_ff": false,
+            "calc_pensjonsgrunnlag": false
+        },
+        {
+            "name": "0118 El.komm. sk.pl. innh.tjen",
+            "account": "521000",
+            "balancing_account": "529000",
+            "calc_tabelltrekk": false,
+            "calc_prosenttrekk": true,
+            "calc_arbeidsgiveravgift": true,
+            "calc_feriepenger": false,
+            "calc_ff": false,
+            "calc_pensjonsgrunnlag": false
+        }
+    ]
+}

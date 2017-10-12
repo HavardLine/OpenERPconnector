@@ -1,5 +1,3 @@
-
-
 from drivers import odoo_connector
 import logging
 
