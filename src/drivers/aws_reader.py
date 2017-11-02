@@ -27,6 +27,7 @@ def customCallback(client, userdata, message):
     print("from topic: ")
     print(message.topic)
     print("--------------\n\n")
+    logger.info(message.payload)
 
 # Get path to client-files
 if name == 'nt':
