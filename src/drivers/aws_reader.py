@@ -20,6 +20,14 @@ import logging
 import time
 from os import path, environ, name
 
+# Custom MQTT message callback
+def customCallback(client, userdata, message):
+    print("Received a new message: ")
+    print(message.payload)
+    print("from topic: ")
+    print(message.topic)
+    print("--------------\n\n")
+
 # Get path to client-files
 if name == 'nt':
     path_iot = path.join(environ['localappdata'], "LTS AS", "iot")
@@ -38,14 +46,20 @@ host = 'a3hdhr3r3b1d8r.iot.eu-central-1.amazonaws.com'
 rootCAPath = path.join(path_iot, 'root-CA.crt')
 certificatePath = path.join(path_iot, 'certificate.pem.crt')
 privateKeyPath = path.join(path_iot, 'private.pem.key')
+useWebsocket = False
 clientId = "no-lts-ws1"
 topic = "LOGGING"
 
 # Init AWSIoTMQTTClient
 myAWSIoTMQTTClient = None
-myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
-myAWSIoTMQTTClient.configureEndpoint(host, 8883)
-myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
+if useWebsocket:
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId, useWebsocket=True)
+    myAWSIoTMQTTClient.configureEndpoint(host, 443)
+    myAWSIoTMQTTClient.configureCredentials(rootCAPath)
+else:
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
+    myAWSIoTMQTTClient.configureEndpoint(host, 8883)
+    myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
 
 # AWSIoTMQTTClient connection configuration
 myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
@@ -54,12 +68,11 @@ myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
 myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
 myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
 
-# Connect
+# Connect and subscribe to AWS IoT
 myAWSIoTMQTTClient.connect()
+myAWSIoTMQTTClient.subscribe(topic, 1, customCallback)
 
 # Publish to the same topic in a loop forever
-loopCount = 0
-while loopCount < 3:
-    myAWSIoTMQTTClient.publish(topic, "New Message " + str(loopCount), 1)
-    loopCount += 1
+
+while True:
     time.sleep(1)
