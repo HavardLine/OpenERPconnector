@@ -6,7 +6,7 @@ class Connection:
 		#self.con is a object of the type SMBConnection
 
 		if os.name == 'nt':
-			config_path = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']+"/config/smb.json"
+			config_path = os.path.join(os.environ['localappdata'], "LTS AS", "smb.json"
 		else:
 			config_path = os.environ['HOMEPATH']+"/config/smb.json"
 

@@ -1,6 +1,8 @@
 from drivers import odoo_connector
 import logging
 
+logging.basicConfig(format="%(asctime)s:%(levelname)s:%(filename)s:%(message)s")
+
 #Establish connection
 con = odoo_connector.Connection()
 

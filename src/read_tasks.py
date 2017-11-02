@@ -5,7 +5,7 @@ from converter import utc_to_local
 
 con = odoo_connector.Connection()
 
-terms = [[['date', 'like', '2017-08']]]
+terms = [[['date', 'like', '2017-10']]]
 
 #Get all lines from tasks in this period
 dataset = con.searchRead('project.task.work', terms, {})

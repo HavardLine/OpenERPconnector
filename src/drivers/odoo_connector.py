@@ -5,7 +5,7 @@ import os, json
 class Connection:
   def __init__(self):
     if os.name == 'nt':
-      config_path = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']+"/config/odoo.json"
+      config_path = os.path.join(os.environ['localappdata'], "LTS AS", "odoo.json")
     else:
       config_path = os.environ['HOMEPATH']+"/config/odoo.json"
 
@@ -45,4 +45,5 @@ class Connection:
 #Test-code for module
 if __name__ == '__main__':
   con = Connection()
-
+  selection_invoices = con.searchRead('account.invoice', [[['journal_id','=', 1], ['state', '=', 'open']]], {'limit':1, 'fields':['date_due', 'journal_id', 'number']}) #SAJ
+  print(selection_invoices)

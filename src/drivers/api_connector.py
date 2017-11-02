@@ -4,7 +4,7 @@ from os import environ, name
 class Connection:
   def __init__(self):
     if name == 'nt':
-      config_path = environ['HOMEDRIVE']+environ['HOMEPATH']+"/config/api-server.json"
+      config_path = os.path.join(os.environ['localappdata'], "LTS AS", "api-server.json"
     else:
       config_path = environ['HOMEPATH']+"/config/api-server.json"
 
