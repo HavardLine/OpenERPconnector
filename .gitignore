@@ -3,4 +3,3 @@
 *.pdf
 *.spec
 build/
-dist/

@@ -15,13 +15,13 @@
  */
  '''
 
-from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging, json
-import time
 from os import path, environ, name
 
-class BananaHandler(logging.Handler):
+class MqttHandler(logging.Handler):
     mqtt_client = None
+    message_buffer = []
 
     def __init__(self):
         logging.Handler.__init__(self)
@@ -36,10 +36,10 @@ class BananaHandler(logging.Handler):
         rootCAPath = path.join(path_iot, 'root-CA.crt')
         certificatePath = path.join(path_iot, 'certificate.pem.crt')
         privateKeyPath = path.join(path_iot, 'private.pem.key')
-        clientId = "no-lts-ws2"
+        self.client_id = 'no-lts-ws1'
 
         # Init AWSIoTMQTTClient
-        self.mqtt_client = AWSIoTMQTTShadowClient(clientId)
+        self.mqtt_client = AWSIoTMQTTClient(self.client_id)
         self.mqtt_client.configureEndpoint(host, 8883)
         self.mqtt_client.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
 
@@ -51,59 +51,32 @@ class BananaHandler(logging.Handler):
         # Connect
         self.mqtt_client.connect()
 
-        # Create a deviceShadow with persistent subscription
-        self.deviceShadowHandler = self.mqtt_client.createShadowHandlerWithName(clientId, True)
-
-
     def emit(self, record):
-        # Custom Shadow callback
-        def customShadowCallback_Update(payload, responseStatus, token):
-            # payload is a JSON string ready to be parsed using json.loads(...)
-            # in both Py2.x and Py3.x
-            if responseStatus == "timeout":
-                print("Update request " + token + " time out!")
-            if responseStatus == "accepted":
-                payloadDict = json.loads(payload)
-                print("~~~~~~~~~~~~~~~~~~~~~~~")
-                print("Update request with token: " + token + " accepted!")
-                print("property: " + str(payloadDict["state"]["desired"]["property"]))
-                print("~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-            if responseStatus == "rejected":
-                print("Update request " + token + " rejected!")
-
-        def customShadowCallback_Delete(payload, responseStatus, token):
-            if responseStatus == "timeout":
-                print("Delete request " + token + " time out!")
-            if responseStatus == "accepted":
-                print("~~~~~~~~~~~~~~~~~~~~~~~")
-                print("Delete request with token: " + token + " accepted!")
-                print("~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-            if responseStatus == "rejected":
-                print("Delete request " + token + " rejected!")
-
-
         self.format(record)
-
-        payload = {'reported': {
+        payload = {
                 'timedate': record.asctime,
                 'name': record.name,
                 'levelname': record.levelname,
                 'msg': record.msg
-            }
         }
-        payload = {"state":{"desired":{"property": "egenskap"}}}
-        print(json.dumps(payload))
-        #self.deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
+        self.message_buffer.append(payload)
+        print(payload)
 
-        self.deviceShadowHandler.shadowUpdate(json.dumps(payload), customShadowCallback_Update, 5)
+    def publish_to_shadow(self, property_name):
+        # Publishing all events that are acumulated in the MqttHandler object
+        token = '$aws/things/' + self.client_id + '/shadow/update'
+        data = '{"state": {"reported": {"' + property_name + '":' + json.dumps(self.message_buffer) + '} } }'
+        print(property_name, token, data)
+        self.mqtt_client.publish(token, data, 1)  
 
 #Test-code for module
 if __name__ == '__main__':
         # Configure logging
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger('logger/test')
         logger.setLevel(logging.INFO)
-        handler = BananaHandler()
+        handler = MqttHandler()
         formatter = logging.Formatter(datefmt=None, fmt="%(asctime)s:%(name)s:%(levelname)s:%(message)s")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-        logger.info('info message')
+        logger.info('this is an info message')
+        handler.publish_to_shadow(logger.name)
