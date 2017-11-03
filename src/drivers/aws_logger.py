@@ -32,11 +32,14 @@ class MqttHandler(logging.Handler):
         else:
             path_iot = environ['HOMEPATH']+"/config/iot/"
 
-        host = 'a3hdhr3r3b1d8r.iot.eu-central-1.amazonaws.com'
+        with open(path.join(path_iot, 'conf.json'), "r") as f:
+            config = json.loads(f.read())
+
+        host = config['host']
+        self.client_id = config['client_id']
         rootCAPath = path.join(path_iot, 'root-CA.crt')
         certificatePath = path.join(path_iot, 'certificate.pem.crt')
         privateKeyPath = path.join(path_iot, 'private.pem.key')
-        self.client_id = 'no-lts-ws1'
 
         # Init AWSIoTMQTTClient
         self.mqtt_client = AWSIoTMQTTClient(self.client_id)
@@ -52,7 +55,7 @@ class MqttHandler(logging.Handler):
         self.mqtt_client.connect()
 
     def emit(self, record):
-        self.format(record)
+        print(self.format(record))
         payload = {
                 'timedate': record.asctime,
                 'name': record.name,
@@ -60,7 +63,6 @@ class MqttHandler(logging.Handler):
                 'msg': record.msg
         }
         self.message_buffer.append(payload)
-        print(payload)
 
     def publish_to_shadow(self, property_name):
         # Publishing all events that are acumulated in the MqttHandler object
