@@ -1,10 +1,10 @@
 import json
-from os import environ, name
+from os import environ, name, path
 
 class Connection:
   def __init__(self):
     if name == 'nt':
-      config_path = os.path.join(os.environ['localappdata'], "LTS AS", "api-server.json"
+      config_path = path.join(environ['localappdata'], "LTS AS", "api-server.json")
     else:
       config_path = environ['HOMEPATH']+"/config/api-server.json"
 
