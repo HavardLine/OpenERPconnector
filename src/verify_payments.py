@@ -10,19 +10,10 @@ Attributes:
     none
 """
 
-import logging
+from logging import warning, debug
 from os.path import split
 from datetime import timedelta, date, datetime
 from drivers import odoo_connector
-from drivers.aws_logger import MqttHandler
-
-# Establish MQTT-logger
-logger = logging.getLogger('accounting/' + split(__file__)[-1])
-logger.setLevel(logging.WARNING)
-formatter = logging.Formatter("%(asctime)s:%(name)s:%(levelname)s:%(filename)s:%(message)s")
-mqtt_handler = MqttHandler()
-mqtt_handler.setFormatter(formatter)
-logger.addHandler(mqtt_handler)
 
 #Establish connection
 con = odoo_connector.Connection()
@@ -47,7 +38,7 @@ selection_invoices = con.searchRead('account.invoice', [[['journal_id', '=', 1],
 for invoice in selection_invoices:
     due_date = datetime.strptime(invoice['date_due'], '%Y-%m-%d').date()
     if (due_date + timedelta(days=14)) <= date.today():
-        logger.warning(
+        warning(
             invoice['journal_id'][1] +
             ' ' +
             invoice['number'] +
@@ -55,6 +46,3 @@ for invoice in selection_invoices:
             str((date.today()-due_date).days) +
             ' days ago'
         )
-
-# Publish all warning to shadow
-mqtt_handler.publish_to_shadow(logger.name)
