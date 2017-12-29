@@ -8,7 +8,6 @@ Attributes:
     none
 """
 from drivers import odoo_connector
-from datetime import timedelta, date, datetime
 import logging, pprint
 
 #Establish connection
