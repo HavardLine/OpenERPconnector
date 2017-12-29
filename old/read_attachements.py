@@ -1,8 +1,9 @@
 
-from drivers import odoo, smb
+from drivers import odoo_connector
+from drivers import smb
 import pprint, tempfile, os
 
-con = d_odoo.Connection()
+con = odoo_connector.Connection()
 smb = d_smb.Connection()
 
 odoo_dataset = con.execute('account.invoice','search_read', [[('type','like','out_'), ('state','=','open')]], {'fields':['id','number']})

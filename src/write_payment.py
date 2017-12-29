@@ -57,13 +57,24 @@ for file_name in files:
                 if con.execute('account.move.line', 'write', [[line_value['id']], {key: str(df.iloc[line_index,row])}]):
                     warning('File "' + file_name+ '", changed value at account.move.line, id:' + str(line_value['id']) + ', column key: ' + str(key))
 
-             # Compares credit value
+            # Compares credit value
             row = 2
             key='credit'
             if df.iloc[line_index,row] != line_value[key]:
                 warning('File "' + file_name + '" line index: '+str(line_index) + ', coulumn key: ' + key + ', ' + str(df.iloc[line_index,row]) +' != '+ str(line_value[key]))
                 if con.execute('account.move.line', 'write', [[line_value['id']], {key: str(df.iloc[line_index,row])}]):
                     warning('File "' + file_name+ '", changed value at account.move.line, id:' + str(line_value['id']) + ', column key: ' + str(key))
+
+        # Upload file if not already uploaded
+        attachments = con.execute('ir.attachment','search_read', [[('res_model', '=', 'account.move'), ('res_id', '=', moves[0]['id'])]], {'fields':['id', 'res_model', 'datas_fname']})
+        if len(attachments) == 0:
+            from base64 import b64encode
+            file_content = b64encode(open(path.join(src, file_name), 'rb').read())
+            uppload_content = {'db_datas': file_content, 'res_model': 'account.move', 'name': file_name, 'type': 'binary', 'res_id': moves[0]['id']}
+            if con.execute('ir.attachment','create', [uppload_content]):
+                info('File "' + file_name+ '", uploaded')
+            else:
+                error('File "' + file_name+ '", failed to upload')
 
     elif len(moves) > 1:
         error('Multiple records exist for "'+file_name+'". Delete records and try new import.')
