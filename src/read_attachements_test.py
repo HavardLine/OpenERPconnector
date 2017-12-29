@@ -12,8 +12,8 @@ attachments = con.execute('ir.attachment','search_read', [[('res_model', '=', 'a
 
 # #Saving invoices to the archive
 for attachment in attachments:
-    import base64
+    from base64 import b64decode
     with open(attachment['datas_fname'], "wb") as fh:
-        fh.write(base64.b64decode(attachment['db_datas']))
+        fh.write(b64decode(attachment['db_datas']))
 
 print(source[0]['id'])
