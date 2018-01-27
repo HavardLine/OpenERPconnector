@@ -24,7 +24,7 @@ selection_invoices = con.searchRead('account.invoice', [[['journal_id','=', 2], 
 for invoice in selection_invoices:
     limit = datetime.strptime(invoice['date_due'], '%Y-%m-%d').date() - timedelta(days=2)
     if limit <= date.today():
-        logger.warning(
+        warning(
             invoice['journal_id'][1] +
             ' ' +
             invoice['number'] +

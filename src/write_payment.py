@@ -10,11 +10,11 @@ Attributes:
 from drivers import odoo_connector
 from logging import error, warning, info
 from pprint import pprint
-from os import listdir, path
+from os import listdir, path, environ
 import pandas
 
 #find file
-src =path.join('L:\\','accounting', 'lønn')
+src =path.join(environ('homedrive') ,'accounting', 'lønn')
 files = listdir(src)
 
 
