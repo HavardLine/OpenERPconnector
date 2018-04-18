@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module for daily verification
+"""This module forces selected journals into draft state.
 
 Example:
     none   
@@ -13,16 +13,15 @@ import logging, pprint
 
 #Establish connection
 con = odoo_connector.Connection()
+names = [
+    'BNK2/2018/0076'
+]
 
-# moves = con.searchRead('account.invoice', [[['number', 'like', 'SAJ/2016/'], ['state', '=','open']]])
-
-# for move in moves:
-#     print(con.execute('account.invoice', 'write', [[move['id']], {'state': "paid"}]))
-#     print(move['id'])
-    
-moves = con.searchRead('account.move', [[['name', '=', 'DIV/2017/0019']]])
-if len(moves) == 1:
-    move_id = moves[0]['id']
-    print(con.execute('account.move', 'write', [[move_id], {'state': "draft"}]))
-else:
-    print('failed to find record')
+for name in names:
+    moves = con.searchRead('account.move', [[['name', '=', name]]])
+    if len(moves) == 1:
+        move_id = moves[0]['id']
+        if con.execute('account.move', 'write', [[move_id], {'state': "draft"}]):
+            logging.warning(name + ', move id '+str(move_id)+' are now in draft state')
+    else:
+        logging.warning('failed to find record')
