@@ -1,4 +1,4 @@
-from logging import warning, debug
+from logging import error
 from os.path import split
 from drivers import odoo_connector
 
@@ -16,7 +16,7 @@ selection_invoices += con.searchRead('account.invoice', [[['journal_id','=', 4],
 #Verify that an attachment exists
 for move in selection_invoices:
     if move['id'] not in attachment_res_ids:
-        warning(move['journal_id'][1] + ' ' + move['internal_number'] + ' dated ' + move['date'] + ' has no attachment!')
+        error(move['journal_id'][1] + ' ' + move['internal_number'] + ' dated ' + move['date'] + ' has no attachment!')
 
 #find all attachements in the account.move category
 attachment_account_move = con.searchRead('ir.attachment', [[['res_model','=','account.move'], ['db_datas','<>', None]]], {'fields': ['name', 'res_id', 'id']})
@@ -31,5 +31,5 @@ selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',8]]]
 #Verify that an attachment exists
 for move in selection_moves:
     if move['id'] not in attachment_res_ids:
-        warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has no attachment!')
+        error(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has no attachment!')
 
