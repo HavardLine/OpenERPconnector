@@ -19,7 +19,9 @@ con = odoo_connector.Connection()
 moves = con.searchRead('account.move')
 
 for move in moves:
-    # Verify period against date
-    if (move['date'][:4] != move['period_id'][1][-4:]) or (move['date'][5:7] != move['period_id'][1][:2]):
-        warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has conflicting period and date')
+    # Ignore OPEJ (journal_id=6)
+    if move['journal_id'][0] != 6:
+        # Verify period against date
+        if (move['date'][:4] != move['period_id'][1][-4:]) or (move['date'][5:7] != move['period_id'][1][:2]): 
+            warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has conflicting period and date')
 debug(str(len(moves)) + ' moves analyzed')
