@@ -17,7 +17,7 @@ def save_base64_data(data, path):
     with open(path, "wb") as fh:
         fh.write(b64decode(data))
 
-def download_attachements(attachment_ids, base_path, file_prefix=''):
+def get_record_attachements(attachment_ids, base_path, file_prefix=''):
     # Loop attachements for this move
     for attachment_id in attachment_ids:
         data = client.read('ir.attachment', attachment_id, 'db_datas name')
@@ -54,19 +54,30 @@ def download_attachements(attachment_ids, base_path, file_prefix=''):
         else:
             logging.debug('No data at attachment_id ' + str(attachment_id)+' path ' +path)
 
-def download_move_attachements(base_path, resource_model):
-    move_ids = client.search(resource_model)
-    moves = client.read(resource_model ,move_ids)
+def download_attachements(base_path, resource_model):
+    record_ids = client.search(resource_model)
+    records = client.read(resource_model ,record_ids)
     
-    # Looping account.move elements
-    for move in moves:
-        if resource_model == 'account.invoice':
-            file_prefix = move['number'][:-10]+'-' + move['number'][-4:] + '-'
-        else:
-            file_prefix = move['name'][:-10]+'-' + move['name'][-4:] + '-'
-        condition = ['res_id = '+ str(move['id']), 'res_model = '+resource_model]
-        attachment_ids = client.search('ir.attachment', condition)
-        download_attachements(attachment_ids, base_path, file_prefix)
+    # Looping record elements
+    for record in records:
+
+            #find existing key
+            if 'number' in record:
+                key='number'
+            elif 'name' in record:
+                key='name'
+            else:
+                logging.critical('Record should contain "number" or "name" record')
+                exit(1)
+
+            # Ignore unposted records
+            if not record[key]:
+                logging.info('Ignored unnamed record. '+resource_model+' id '+ str(record['id']))
+            else:
+                file_prefix = record[key][:-10]+'-' + record[key][-4:] + '-'
+                condition = ['res_id = '+ str(record['id']), 'res_model = '+resource_model]
+                attachment_ids = client.search('ir.attachment', condition)
+                get_record_attachements(attachment_ids, base_path, file_prefix)
 
 if __name__ == '__main__':
     logging.basicConfig(level="INFO")
@@ -74,6 +85,6 @@ if __name__ == '__main__':
     destination = 'L:\\accounting\\vedlegg'
     res_models = ['account.move', 'account.invoice']
     for res_model in res_models:
-        download_move_attachements(destination, res_model)
+        download_attachements(destination, res_model)
     logging.info('Script read_attachments.py finished')
    
