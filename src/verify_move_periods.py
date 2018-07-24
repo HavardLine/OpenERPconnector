@@ -12,16 +12,20 @@ from os.path import split
 from logging import warning, debug
 from datetime import timedelta, date, datetime
 
-#Establish connection
-con = odoo_connector.Connection()
+def run():
+    #Establish connection
+    con = odoo_connector.Connection()
 
-#Find all supplier invoices not in draft
-moves = con.searchRead('account.move')
+    #Find all supplier invoices not in draft
+    moves = con.searchRead('account.move')
 
-for move in moves:
-    # Ignore OPEJ (journal_id=6)
-    if move['journal_id'][0] != 6:
-        # Verify period against date
-        if (move['date'][:4] != move['period_id'][1][-4:]) or (move['date'][5:7] != move['period_id'][1][:2]): 
-            warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has conflicting period and date')
-debug(str(len(moves)) + ' moves analyzed')
+    for move in moves:
+        # Ignore OPEJ (journal_id=6)
+        if move['journal_id'][0] != 6:
+            # Verify period against date
+            if (move['date'][:4] != move['period_id'][1][-4:]) or (move['date'][5:7] != move['period_id'][1][:2]): 
+                warning(move['journal_id'][1] + ' ' + move['name'] + ' dated ' + move['date'] + ' has conflicting period and date')
+    debug(str(len(moves)) + ' moves analyzed')
+
+if __name__ == '__main__':
+    run()

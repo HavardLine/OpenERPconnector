@@ -7,7 +7,7 @@ class Connection:
     if os.name == 'nt':
       config_path = os.path.join(os.environ['localappdata'], "LTS AS", "odoo.json")
     else:
-      config_path = os.environ['HOMEPATH']+"/config/odoo.json"
+      config_path = "/opt/ERPconnector/config/odoo.json"
 
     with open(config_path, "r") as f:
       file_buffer = f.read()

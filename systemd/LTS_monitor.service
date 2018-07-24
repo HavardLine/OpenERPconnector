@@ -1,0 +1,9 @@
+[Unit]
+Description=LTS AS monitor
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/ERPconnector/src/monitor_accountant.py
+
+[Install]
+WantedBy=multi-user.target
