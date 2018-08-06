@@ -25,10 +25,13 @@ def run():
     for attachment in attachment_account_move:
         attachment_res_ids.append(attachment['res_id'])
     #Find all journals that needs attachement
-    selection_moves = con.searchRead('account.move', terms=[[['journal_id','=',5], ['state','=','posted']]]) #DIV
-    selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',6]]]) #OPEJ
-    selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',7], ['state','=','posted']]]) #BNK1
-    selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',8]]]) #BNK2
+    selection_moves = con.searchRead('account.move', terms=[[['journal_id','=',5]]]) #DIV
+    # Do not check for attachements in OPEJ-journals
+    # selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',6]]]) #OPEJ
+    selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',7]]]) #BNK1
+    # Check for attatchments only in draft state
+    selection_moves += con.searchRead('account.move', terms=[[['journal_id','=',8], ['state','=','draft']]]) #BNK2
+
     #Verify that an attachment exists
     for move in selection_moves:
         if move['id'] not in attachment_res_ids:
