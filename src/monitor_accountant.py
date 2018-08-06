@@ -1,5 +1,5 @@
 import logging, time, verify_attachments, verify_move_periods, verify_payments
-FORMAT = '%(asctime)sUTC - %(levelname)s:\n%(message)s'
+FORMAT = '%(asctime)s UTC - %(levelname)s:\n%(message)s'
 logging.basicConfig(filename="/dev/tty1", filemode="w", level='INFO', format=FORMAT, datefmt='%m-%d %H:%M')
 
 while 1:
