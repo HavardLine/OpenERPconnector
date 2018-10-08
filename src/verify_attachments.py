@@ -17,7 +17,10 @@ def run():
     #Verify that an attachment exists
     for move in selection_invoices:
         if move['id'] not in attachment_res_ids:
-            error(move['journal_id'][1] + ' ' + move['internal_number'] + ' dated ' + move['date'] + ' has no attachment!')
+            if 'key1' in move:
+                error(move['journal_id'][1] + ' ' + move['internal_number'] + ' dated ' + move['date'] + ' has no attachment!')
+            else:
+                error(move['journal_id'][1] + ' ' + move['internal_number'] + ' has no attachment!')
 
     #find all attachements in the account.move category
     attachment_account_move = con.searchRead('ir.attachment', [[['res_model','=','account.move'], ['db_datas','<>', None]]], {'fields': ['name', 'res_id', 'id']})
